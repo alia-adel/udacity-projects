@@ -26,7 +26,6 @@ a:focus {
 
 /*Header*/
 .site-header {
-	background-color: #fff;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -59,7 +58,7 @@ a:focus {
 /*Site Qoute*/
 .site-qoute {
 	position: relative;
-	top: -50%;
+	top: -330px;
 	margin-top: -10%;	/*This hack added to removed the space left by the element from https://stackoverflow.com/questions/15820336/relative-positioning-leaves-a-gap*/
 	background-color: #fff;
 	font-weight: bold;
@@ -72,8 +71,7 @@ a:focus {
 /*end of Site Qoute*/
 
 /*Featured Work*/
-.work-section-header {
-	background-color: #fff;
+.work-section-title {
 	color: #7d97ad;
 }
 /*end of Featured Work*/
@@ -155,8 +153,8 @@ a:focus {
 	}
 
 	.work-section-header {
-		margin: auto;
-		padding: 20px 0 10px 0;
+		text-align: center;
+		padding-top: 10px;
 	}
 
 	.work-section {
@@ -167,6 +165,6 @@ a:focus {
 
 	.work-card {
 		width: 100% !important;
-		margin-bottom: 10px;
+		margin-bottom: 20px;
 	}
 }
