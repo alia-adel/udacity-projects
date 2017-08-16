@@ -1,0 +1,54 @@
+/* add your CSS here */
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+.animal-card {
+  border: 1px solid rgb(211,211,211);
+  width: 300px;
+  padding: 15px;
+  -webkit-box-shadow: 5px 5px 5px 0px rgba(237,234,237,1);
+  -moz-box-shadow: 5px 5px 5px 0px rgba(237,234,237,1);
+  box-shadow: 5px 5px 5px 0px rgba(237,234,237,1);
+}
+
+.animal-name {
+  font-weight: bold;
+  /*"animal-card" has padding-top of 15px, so to unify the padding
+  around the title the padding will be 10px at the top & 25px at the bottom.*/
+  margin: 10px 0px 25px 0px;
+}
+
+.animal-img {
+  width: 300px;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0px 0px 109px -19px rgba(237,234,237,1);
+  -moz-box-shadow: 0px 0px 109px -19px rgba(237,234,237,1);
+  box-shadow: 0px 0px 109px -19px rgba(237,234,237,1);
+}
+
+.animal-information {
+  border: 1px solid rgb(211,211,211);
+  padding: 15px;
+}
+
+.animal-interesting-fact {
+  font-style: italic;
+  margin-top: 0px;
+}
+
+.animal-list {
+  list-style:none;
+  padding: 0px; /*Overriding unordered list default padding*/
+}
+
+.animal-list-item {
+}
+
+.animal-ls-item-label {
+  font-weight: bold;
+}
+
+.animal-description {
+}
