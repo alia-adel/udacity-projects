@@ -2,33 +2,39 @@
  * @description Draw the grid based on the user's entered height & width
  */
 function makeGrid() {
-    const tableRowHtml =
-        `<tr>
-		</tr>`;
-    const tableColHtml = `<td></td>`;
 
-    //Get user's entered grid height
-    let gridHeight = $('#input_height').val();
+    // Get user's entered grid height
+    let gridHeight = document.getElementById('input_height').value;
 
-    //Get user's entered grid width
-    let gridWidth = $('#input_width').val();
+    // Get user's entered grid width
+    let gridWidth = document.getElementById('input_width').value;
 
-    //Draw a table with ${gridHeight} rows & ${gridWidth} as columns
     if (gridHeight > 1 && gridWidth > 1) {
+        let tableElement = document.getElementById('pixel_canvas');
+
+        // In case user re-submits the form, clear the previous table
+        if (tableElement.childNodes.length > 0) {
+            removeRowsFromTable(tableElement);
+        }
+
+        // Draw a table with ${gridHeight} rows & ${gridWidth} as columns
         for (let row = 0; row < gridHeight; row++) {
 
-            $('#pixel_canvas').append(tableRowHtml);
+            let tableElement = document.getElementById('pixel_canvas');
+            tableElement.appendChild(document.createElement('tr'));
 
             for (let col = 0; col < gridWidth; col++) {
-                $('tr').last().append(tableColHtml);
+                tableElement.lastChild.appendChild(document.createElement('td'));
             }
 
         }
 
-        // Add click events on cells
-        $('td').click(function(event) {
-            $(this).css('background-color', function() {
-                return $('#colorPicker').val();
+        // Add click event on cells
+        let tableCells = Array.from(document.getElementsByTagName('td'));
+
+        tableCells.forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                this.style.backgroundColor = document.getElementById('colorPicker').value;
             });
         });
 
@@ -38,14 +44,26 @@ function makeGrid() {
 
 }
 
+/**
+ * @description Remove all rows from the table
+ * @param {Object} tableElement - Canvas table node
+ */
+function removeRowsFromTable(tableElement) {
+    while (tableElement.childNodes.length > 0) {
+        tableElement.removeChild(tableElement.childNodes[0]);
+    }
+}
+
 // call makeGrid() when form gets submitted
-$('#sizePicker').submit(function(event) {
+document.getElementById('sizePicker').addEventListener('submit', function(event) {
     event.preventDefault();
     makeGrid();
 });
 
+
 //Resets sizePicker form & grid back to 1x1
-$('#resetBtn').click(function() {
-    $('tr').remove();
-    $('#colorPicker').val('#000');
+document.getElementById('resetBtn').addEventListener('click', function() {
+    removeRowsFromTable(document.getElementById('pixel_canvas'));
+    // reset color back to black
+    document.getElementById('colorPicker').value = '#000';
 });
