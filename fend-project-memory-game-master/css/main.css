@@ -1,3 +1,7 @@
+body {
+    font-family: 'Coda', cursive;
+}
+
 .container {
 	display: flex;
 	flex-direction: column;
@@ -9,12 +13,12 @@
 	border-radius: 20px;
 	width: 50vw;
 	min-width: 400px;
-	max-width: 500px;
+	max-width: 400px;
 	height: 50vw;
 	min-height: 400px;
-	max-height: 500px;
-	margin: 20px;
-	padding: 10px 0;
+	max-height: 400px;
+	/*margin: 20px;*/
+	padding: 10px;
 	background: -webkit-linear-gradient(to bottom right, #30c7c3, #e2a2da); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(to bottom right, #30c7c3, #e2a2da); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(to bottom right, #30c7c3, #e2a2da); /* For Firefox 3.6 to 15 */
@@ -30,15 +34,17 @@
 	display: flex;
 	justify-content: space-between;
     align-items: center;
+    width: 100%;
+    height: calc(100%/4 - 20px);
     padding: 10px 0;
 
 }
 
 .card-slot {
 	margin: 10px;
-	width: 90px;
+	width: calc(100%/4 - 20px);
 	min-width: 70px;
-	height: 90px;
+	height: calc(100%/4 - 20px);
 	min-height: 70px;
 	border-radius: 10px;
     background-color: #424242;
@@ -64,7 +70,8 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 20px;
+	margin: 10px 20px;
+	padding: 0 10px;
 }
 
 
@@ -86,7 +93,60 @@
 	background-color: #31eae6;
 }
 
+.card-slot.wrong {
+	background-color: red;
+	animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+	transform: translate3d(0, 0, 0);
+}
+
 .card-slot.show  .fa {
+	display: block;
+}
+
+
+#game-modal, #game-success-alert{
+	width: 0;
+	height: 0;
+	transition: 0.5s;
+}
+
+#game-success-alert p {
+	display: none;
+}
+
+#game-modal.fullScreen {
+	position: fixed;
+	background-color: black;
+	width: 100vw;
+    height: 100vh;
+	z-index: 1000;
+	opacity: 0.5;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#game-success-alert.fullScreen{
+	position: fixed;
+	top: 0;
+    bottom: 0;
+	z-index: 2000;
+	opacity: 1;
+	width: 40vw;
+	min-width: 200px;
+	height: 50vh;
+	min-height: 150px;
+	background-color: #fff;
+	border-radius: 10px;
+	padding: 10px;
+	margin: auto;
+}
+
+#game-success-alert.fullScreen p {
 	display: block;
 }
 
@@ -108,3 +168,40 @@
 		transform: rotateY(90deg);
 	}
 }
+
+@-webkit-@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+

@@ -16,7 +16,9 @@ let startDate = new Date();
 let cssClasses = {
 	flip : 'flip',
 	show : 'show',
-	correct: 'correct'
+	correct: 'correct',
+	wrong : 'wrong',
+	fullScreen : 'fullScreen'
 };
 
 let lastFlippedCard;
@@ -32,36 +34,22 @@ let Card = function(cardIcon) {
 Card.prototype.showCard = function() {
 	this.flipped = true;
 	console.log(`Adding flip class`);
-	this.htmlElement.className = this.updateCardClasses(cssClasses.flip, true);
+	this.htmlElement.className = updateCardClasses(this, cssClasses.flip, true);
 	console.log(`Adding show class`);
 	//TODO fix the following line for proper card flip
 	// this.htmlElement = setTimeout(this.updateCardClasses, 500, cssClasses.show, true);
-	this.htmlElement.className = this.updateCardClasses(cssClasses.show, true);
+	this.htmlElement.className = updateCardClasses(this, cssClasses.show, true);
 };
 
 Card.prototype.hideCard = function() {
  	this.flipped = false;
- 	this.htmlElement.className = this.updateCardClasses(cssClasses.show, false);
- 	this.htmlElement.className = this.updateCardClasses(cssClasses.flip, false);
+ 	this.htmlElement.className = updateCardClasses(this, cssClasses.show, false);
+ 	this.htmlElement.className = updateCardClasses(this, cssClasses.flip, false);
 };
 
 Card.prototype.markCardCorrect = function() {
 	this.correct = true;
-	this.htmlElement = this.updateCardClasses(cssClasses.correct, true);
-};
-
-Card.prototype.updateCardClasses = function(className, add) {
-	console.log(`Updating classes for card with index: ${this.index}`);
-	if(add && !this.htmlElement.className.includes(className)) {
-		this.htmlElement.className = `${this.htmlElement.className} ${className}`;
-	} else if(!add && this.htmlElement.className.includes(className)) {
-		console.log(`removing ${className} from card with index ${this.index}
-			which had css class ${this.htmlElement.className}`);
-		this.htmlElement.className = this.htmlElement.className.replace(className, '');
-		console.log(`element after css classes removal:
-			${this.htmlElement.className}`);
-	}
-	return this.htmlElement.className;
+	this.htmlElement = updateCardClasses(this, cssClasses.correct, true);
 };
 
 
@@ -113,7 +101,7 @@ function startCardBoard() {
 					if(!cards[i].flipped) {
 						cards[i].showCard();
 					}
-					checkMatchingCards(cards[i]);
+					setTimeout(checkMatchingCards, 300, cards[i]);
 				}
 			});
 
@@ -125,7 +113,19 @@ function startCardBoard() {
 };
 
 
-
+function updateCardClasses(card, className, add) {
+	console.log(`Updating classes for card with index: ${card.index}`);
+	if(add && !card.htmlElement.className.includes(className)) {
+		card.htmlElement.className = `${card.htmlElement.className} ${className}`;
+	} else if(!add && card.htmlElement.className.includes(className)) {
+		console.log(`removing ${className} from card with index ${card.index}
+			which had css class ${card.htmlElement.className}`);
+		card.htmlElement.className = card.htmlElement.className.replace(className, '');
+		console.log(`element after css classes removal:
+			${card.htmlElement.className}`);
+	}
+	return card.htmlElement.className;
+};
 
 
 /*
@@ -143,7 +143,7 @@ function checkMatchingCards(card) {
 
 	if(lastFlippedCard != null) {
 		if(lastFlippedCard.flipped && !lastFlippedCard.correct
-			&& card.index != lastFlippedCard.index && (card.icon === lastFlippedCard.icon)) {
+			&& card.index != lastFlippedCard.index && card.flipped && (card.icon === lastFlippedCard.icon)) {
 
 			console.log(`Found another flipped card with index: ${lastFlippedCard.index}`);
 			console.log(`Cards comparison success`);
@@ -154,20 +154,36 @@ function checkMatchingCards(card) {
 
 		} else {
 			console.log(`Cards didn't match so flipping cards back.`);
-			card.hideCard();
-			lastFlippedCard.hideCard();
+			updateCardClasses(card, cssClasses.wrong, true);
+			updateCardClasses(lastFlippedCard, cssClasses.wrong, true);
+
+			window.setTimeout(function() {
+				alertWrongCards(card, lastFlippedCard);
+			}, 500);
+
 
 			console.log(`Card with index ${card.index} has css classes ${card.htmlElement.className}
 				&& its flipping status is ${card.flipped}
 				as for the last flipped card with index ${lastFlippedCard.index} has css classes ${lastFlippedCard.htmlElement.className}
 				&& its flipping status is ${lastFlippedCard.flipped}`);
-			lastFlippedCard = null;
+
 		}
 	} else {
 		lastFlippedCard = card;
 	}
 
 };
+
+function alertWrongCards(card, lastCard){
+
+	card.hideCard();
+	lastCard.hideCard();
+
+	updateCardClasses(card, cssClasses.wrong, false);
+	updateCardClasses(lastCard, cssClasses.wrong, false);
+
+	lastFlippedCard = null;
+}
 
 
 
@@ -177,7 +193,21 @@ function checkGameCompletetion() {
 			return false;
 		}
 	}
-	alert(`You have successfully completed the game in ${calculateGameTime()/1000} seconds!`);
+
+	document.getElementById('game-modal').className
+		= `${document.getElementById('game-modal').className} ${cssClasses.fullScreen}`;
+
+	document.getElementById('game-success-alert').className
+		= `${document.getElementById('game-success-alert').className} ${cssClasses.fullScreen}`;
+
+	document.getElementById('game-modal').addEventListener('click', function(){
+		document.getElementById('game-modal').className
+			= (document.getElementById('game-modal').className).replace(cssClasses.fullScreen, '');
+		document.getElementById('game-success-alert').className
+			= (document.getElementById('game-success-alert').className).replace(cssClasses.fullScreen, '');
+	});
+
+	// alert(`You have successfully completed the game in ${calculateGameTime()/1000} seconds!`);
 	return true;
 }
 
