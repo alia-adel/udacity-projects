@@ -182,7 +182,7 @@ function calcualteMoveScore() {
 }
 
 function calculateGameTime() {
-	return new Date() - startDate;
+	return (new Date() - startDate)/1000;
 }
 
 
@@ -193,6 +193,11 @@ function checkGameCompletetion() {
 			return false;
 		}
 	}
+	let succesMsg = document.getElementsByClassName('success-sub-msg')[0];
+	console.log(succesMsg.innerHTML);
+	succesMsg.innerHTML = succesMsg.innerHTML.replace('#{move}', moveCounter).replace(
+		'#{time}', calculateGameTime()).replace(
+		'#{stars}', (3-document.getElementsByClassName('dim').length));
 
 	updateElementClasses(document.getElementById('game-modal'), cssClasses.fullScreen, true);
 	updateElementClasses(document.getElementById('game-success-alert'), cssClasses.fullScreen, true);

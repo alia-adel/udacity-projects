@@ -12,10 +12,10 @@ body {
 .game-deck {
 	border-radius: 20px;
 	width: 50vw;
-	min-width: 400px;
+	min-width: 300px;
 	max-width: 400px;
 	height: 50vw;
-	min-height: 400px;
+	min-height: 300px;
 	max-height: 400px;
 	/*margin: 20px;*/
 	padding: 10px;
@@ -35,17 +35,18 @@ body {
 	justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: calc(100%/4 - 20px);
-    padding: 10px 0;
-
+    height: 100%;
+    padding: 0;
 }
 
 .card-slot {
 	margin: 10px;
 	width: calc(100%/4 - 20px);
-	min-width: 70px;
-	height: calc(100%/4 - 20px);
-	min-height: 70px;
+	min-width: 55px;
+	max-width: 90px;
+	height: 100%;
+	min-height: 55px;
+	max-height: 90px;
 	border-radius: 10px;
     background-color: #424242;
     cursor: pointer;
@@ -74,14 +75,17 @@ body {
 	padding: 0 10px;
 }
 
-#game-moves {
-
+.game-tracking {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
-.game-score {
+.game-starring {
 	color: #F9DE0D;
 	display: flex;
 	justify-content: space-between;
+	padding-right: 5px;
 }
 
 .fa-star.dim {
@@ -117,15 +121,13 @@ body {
 }
 
 
-#game-modal, #game-success-alert{
+#game-modal,
+#game-success-alert{
 	width: 0;
 	height: 0;
 	transition: 0.5s;
 }
 
-#game-success-alert p {
-	display: none;
-}
 
 #game-modal.fullScreen {
 	position: fixed;
@@ -143,26 +145,74 @@ body {
 	align-items: center;
 }
 
-#game-success-alert.fullScreen{
+
+#game-success-alert p,
+#game-success-alert h1,
+#game-success-alert button,
+#game-success-alert div,
+#game-success-alert i{
+	display: none;
+}
+
+
+#game-success-alert.fullScreen p,
+#game-success-alert.fullScreen h1,
+#game-success-alert.fullScreen button,
+#game-success-alert.fullScreen div,
+#game-success-alert.fullScreen i{
+	display: block;
+}
+
+#game-success-alert.fullScreen {
 	position: fixed;
+	display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 	top: 0;
     bottom: 0;
 	z-index: 2000;
 	opacity: 1;
 	width: 40vw;
 	min-width: 200px;
-	height: 50vh;
+	height: 100%;
 	min-height: 150px;
 	background-color: #fff;
 	border-radius: 10px;
-	padding: 10px;
+	padding: 40px;
 	margin: auto;
 }
 
-#game-success-alert.fullScreen p {
-	display: block;
+
+#game-success-alert.fullScreen .fa-check {
+	color: #95d295;
+    border: 1px solid #808080;
+    padding: 30px;
+    border-radius: 50%;
+    cursor: default;
 }
 
+#game-success-alert.fullScreen .alert-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+#play-again {
+	color: #fff;
+    width: 150px;
+    height: 30px;
+    padding: 10px;
+    text-align: center;
+    background-color: #95d295;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+		box-shadow: 0 8px 6px -6px black;
+    }
+}
 
 @-webkit-@keyframes flip_card {
 	from {

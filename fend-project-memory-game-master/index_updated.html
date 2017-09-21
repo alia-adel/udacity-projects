@@ -13,12 +13,14 @@
 <div class="container">
     <h1>Matching Game</h1>
     <div class="game-board">
-        <div class="game-score">
-            <i class="fa fa-star" id="star1" aria-hidden="true"></i>
-            <i class="fa fa-star" id="star2" aria-hidden="true"></i>
-            <i class="fa fa-star" id="star3" aria-hidden="true"></i>
-        </div>
-        <div id="game-moves">
+        <div class="game-tracking">
+            <div class="game-starring">
+                <i class="fa fa-star" id="star1" aria-hidden="true"></i>
+                <i class="fa fa-star" id="star2" aria-hidden="true"></i>
+                <i class="fa fa-star" id="star3" aria-hidden="true"></i>
+            </div>
+            <div id="game-moves">
+            </div>
         </div>
         <div class="actions">
             <i class="fa fa-refresh fa-lg" aria-hidden="true" onclick="location.reload(true);"></i>
@@ -84,7 +86,12 @@
     </div>
     <div id="game-modal"></div>
     <div id="game-success-alert">
-        <p>Congratualtions !</p>
+        <div class="alert-body">
+            <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+            <h1>Congratualtions you Won!</h1>
+            <p class="success-sub-msg">With #{move} moves in #{time} seconds & with #{stars} stars.</p>
+            <span id="play-again" onclick="location.reload(true);">Play Again</span>
+        </div>
     </div>
 </div>
 
