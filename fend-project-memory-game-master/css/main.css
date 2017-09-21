@@ -1,0 +1,110 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.game-deck {
+	border-radius: 20px;
+	width: 50vw;
+	min-width: 400px;
+	max-width: 500px;
+	height: 50vw;
+	min-height: 400px;
+	max-height: 500px;
+	margin: 20px;
+	padding: 10px 0;
+	background: -webkit-linear-gradient(to bottom right, #30c7c3, #e2a2da); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(to bottom right, #30c7c3, #e2a2da); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(to bottom right, #30c7c3, #e2a2da); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, #30c7c3, #e2a2da); /* Standard syntax (must be last) */
+    box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-row {
+	display: flex;
+	justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+
+}
+
+.card-slot {
+	margin: 10px;
+	width: 90px;
+	min-width: 70px;
+	height: 90px;
+	min-height: 70px;
+	border-radius: 10px;
+    background-color: #424242;
+    cursor: pointer;
+    list-style: none;
+    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+    transition: linear 0.5s;
+}
+
+.fa {
+	cursor: pointer;
+}
+
+.fa.game-icons {
+	display: none;
+}
+
+#game-moves {
+	color red;
+}
+
+.game-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+
+.card-slot.flip {
+    /* @keyframes duration | timing-function | delay |
+	iteration-count | direction | fill-mode | play-state | name */
+    animation: 0.5s linear 0s 1 normal flip_card;
+}
+
+.card-slot.show {
+	background-color: #da46c5;
+	color: white;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-slot.correct {
+	background-color: #31eae6;
+}
+
+.card-slot.show  .fa {
+	display: block;
+}
+
+
+@-webkit-@keyframes flip_card {
+	from {
+			transform: rotateY(0deg);
+	}
+	to {
+		transform: rotateY(90deg);
+	}
+}
+
+@keyframes flip_card {
+	from {
+			transform: rotateY(0deg);
+	}
+	to {
+		transform: rotateY(90deg);
+	}
+}
