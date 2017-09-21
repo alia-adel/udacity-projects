@@ -62,18 +62,31 @@ body {
 	display: none;
 }
 
-#game-moves {
-	color red;
-}
 
-.game-actions {
+
+
+.game-board {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	width: 30vw;
 	margin: 10px 20px;
 	padding: 0 10px;
 }
 
+#game-moves {
+
+}
+
+.game-score {
+	color: #F9DE0D;
+	display: flex;
+	justify-content: space-between;
+}
+
+.fa-star.dim {
+	color: #D4CDCD;
+}
 
 .card-slot.flip {
     /* @keyframes duration | timing-function | delay |
@@ -94,7 +107,7 @@ body {
 }
 
 .card-slot.wrong {
-	background-color: red;
+	background-color: #FF0000;
 	animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
 	transform: translate3d(0, 0, 0);
 }
@@ -120,7 +133,7 @@ body {
 	width: 100vw;
     height: 100vh;
 	z-index: 1000;
-	opacity: 0.5;
+	opacity: 0.8;
 	top: 0;
 	right: 0;
 	bottom: 0;

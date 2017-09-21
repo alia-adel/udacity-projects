@@ -2,10 +2,10 @@
  * Create a list that holds all of your cards
  */
 
-let cardsIcons = ['fa-camera', 'fa-futbol-o', 'fa-anchor', 'fa-bug', 'fa-bicycle', 'fa-diamond', 'fa-twitter', 'fa-car',
+const CARDS_ICONS = ['fa-camera', 'fa-futbol-o', 'fa-anchor', 'fa-bug', 'fa-bicycle', 'fa-diamond', 'fa-twitter', 'fa-car',
 'fa-camera', 'fa-futbol-o', 'fa-anchor', 'fa-bug', 'fa-bicycle', 'fa-diamond', 'fa-twitter', 'fa-car'];
 
-let cardIconBaseClasses = 'fa fa-lg game-icons';
+const CARD_ICON_BASE_CLASSES = 'fa fa-lg game-icons';
 
 let moveCounter = 0;
 
@@ -13,12 +13,19 @@ let startRating = 0;
 
 let startDate = new Date();
 
+// Create cards objects' array
+let cards = [];
+
+// Retrieve all games boards cards html elements
+let cardsHtmlElem = document.getElementsByClassName('game-icons');
+
 let cssClasses = {
 	flip : 'flip',
 	show : 'show',
 	correct: 'correct',
 	wrong : 'wrong',
-	fullScreen : 'fullScreen'
+	fullScreen : 'fullScreen',
+	dim : 'dim'
 };
 
 let lastFlippedCard;
@@ -33,34 +40,25 @@ let Card = function(cardIcon) {
 
 Card.prototype.showCard = function() {
 	this.flipped = true;
-	console.log(`Adding flip class`);
-	this.htmlElement.className = updateCardClasses(this, cssClasses.flip, true);
-	console.log(`Adding show class`);
-	//TODO fix the following line for proper card flip
-	// this.htmlElement = setTimeout(this.updateCardClasses, 500, cssClasses.show, true);
-	this.htmlElement.className = updateCardClasses(this, cssClasses.show, true);
+	this.htmlElement.className = updateElementClasses(this.htmlElement, cssClasses.flip, true);
+	this.htmlElement.className = updateElementClasses(this.htmlElement, cssClasses.show, true);
 };
 
 Card.prototype.hideCard = function() {
  	this.flipped = false;
- 	this.htmlElement.className = updateCardClasses(this, cssClasses.show, false);
- 	this.htmlElement.className = updateCardClasses(this, cssClasses.flip, false);
+ 	this.htmlElement.className = updateElementClasses(this.htmlElement, cssClasses.show, false);
+ 	this.htmlElement.className = updateElementClasses(this.htmlElement, cssClasses.flip, false);
 };
 
 Card.prototype.markCardCorrect = function() {
 	this.correct = true;
-	this.htmlElement = updateCardClasses(this, cssClasses.correct, true);
+	this.htmlElement = updateElementClasses(this.htmlElement, cssClasses.correct, true);
 };
 
 
 /* end of Card Class Definition */
 
-// Create cards objects' array
-let cards = [];
 
-
-// Retrieve all games boards cards html elements
-let cardsHtmlElem = document.getElementsByClassName('game-icons');
 
 /*
  * 1- Shuffle icons
@@ -72,7 +70,7 @@ let cardsHtmlElem = document.getElementsByClassName('game-icons');
 
 function startCardBoard() {
 	// Shuffle the game board icons
-	let cardsIconsArr = shuffle(cardsIcons);
+	let cardsIconsArr = shuffle(CARDS_ICONS);
 
 	let card;
 
@@ -82,7 +80,7 @@ function startCardBoard() {
 
 		for(let i = 0; i< cardsIconsArr.length; i++) {
 			// Reset any added classes
-			cardsHtmlElem[i].className = `${cardIconBaseClasses} ${cardsIconsArr[i]}`;
+			cardsHtmlElem[i].className = `${CARD_ICON_BASE_CLASSES} ${cardsIconsArr[i]}`;
 			// Create new card object
 			card = new Card(cardsIconsArr[i]);
 			card.htmlElement = cardsHtmlElem[i].parentElement;
@@ -93,7 +91,8 @@ function startCardBoard() {
 			card.htmlElement.addEventListener('click', function() {
 				if(!this.className.includes(cssClasses.show)){
 					moveCounter++;
-					document.getElementById('game-moves').innerHTML = moveCounter;
+					document.getElementById('game-moves').innerHTML = moveCounter + ((moveCounter <= 1)?' Move':' Moves');
+					calcualteMoveScore();
 				}
 
 				// Update card status & check matches
@@ -112,19 +111,16 @@ function startCardBoard() {
 	}
 };
 
-
-function updateCardClasses(card, className, add) {
-	console.log(`Updating classes for card with index: ${card.index}`);
-	if(add && !card.htmlElement.className.includes(className)) {
-		card.htmlElement.className = `${card.htmlElement.className} ${className}`;
-	} else if(!add && card.htmlElement.className.includes(className)) {
-		console.log(`removing ${className} from card with index ${card.index}
-			which had css class ${card.htmlElement.className}`);
-		card.htmlElement.className = card.htmlElement.className.replace(className, '');
-		console.log(`element after css classes removal:
-			${card.htmlElement.className}`);
+/*
+ * Add/Remove classes from an element
+ */
+function updateElementClasses(element, className, add) {
+	if(add && !element.className.includes(className)) {
+		element.className = `${element.className} ${className}`;
+	} else if(!add && element.className.includes(className)) {
+		element.className = element.className.replace(className, '');
 	}
-	return card.htmlElement.className;
+	return element.className;
 };
 
 
@@ -132,41 +128,28 @@ function updateCardClasses(card, className, add) {
  * Check if the last clicked card matches the already opened one
  */
 function checkMatchingCards(card) {
-	console.log(`Checking card ${card.index} for matches`);
 	let cardIcon = '';
 	if(card.htmlElement.childNodes !=null && card.htmlElement.childNodes.length > 0
 		&& card.htmlElement.childNodes[1].className != null) {
-		cardIcon = card.htmlElement.childNodes[1].className.replace(cardIconBaseClasses, '').trim();
-		console.log(`Card ${card.index} current icon is: ${cardIcon}`);
+		cardIcon = card.htmlElement.childNodes[1].className.replace(CARD_ICON_BASE_CLASSES, '').trim();
 	}
 
 
 	if(lastFlippedCard != null) {
 		if(lastFlippedCard.flipped && !lastFlippedCard.correct
 			&& card.index != lastFlippedCard.index && card.flipped && (card.icon === lastFlippedCard.icon)) {
-
-			console.log(`Found another flipped card with index: ${lastFlippedCard.index}`);
-			console.log(`Cards comparison success`);
 			card.markCardCorrect();
 			lastFlippedCard.markCardCorrect();
 			lastFlippedCard = null;
 			checkGameCompletetion();
 
 		} else {
-			console.log(`Cards didn't match so flipping cards back.`);
-			updateCardClasses(card, cssClasses.wrong, true);
-			updateCardClasses(lastFlippedCard, cssClasses.wrong, true);
+			updateElementClasses(card.htmlElement, cssClasses.wrong, true);
+			updateElementClasses(lastFlippedCard.htmlElement, cssClasses.wrong, true);
 
 			window.setTimeout(function() {
 				alertWrongCards(card, lastFlippedCard);
 			}, 500);
-
-
-			console.log(`Card with index ${card.index} has css classes ${card.htmlElement.className}
-				&& its flipping status is ${card.flipped}
-				as for the last flipped card with index ${lastFlippedCard.index} has css classes ${lastFlippedCard.htmlElement.className}
-				&& its flipping status is ${lastFlippedCard.flipped}`);
-
 		}
 	} else {
 		lastFlippedCard = card;
@@ -179,10 +162,27 @@ function alertWrongCards(card, lastCard){
 	card.hideCard();
 	lastCard.hideCard();
 
-	updateCardClasses(card, cssClasses.wrong, false);
-	updateCardClasses(lastCard, cssClasses.wrong, false);
+	updateElementClasses(card.htmlElement, cssClasses.wrong, false);
+	updateElementClasses(lastCard.htmlElement, cssClasses.wrong, false);
 
 	lastFlippedCard = null;
+}
+
+function calcualteMoveScore() {
+	console.log(`Move counts ${moveCounter}`);
+	if(moveCounter > CARDS_ICONS.length) {
+		updateElementClasses(document.getElementById('star1'), cssClasses.dim, true);
+	}
+	if(moveCounter > (CARDS_ICONS.length * 2)) {
+		updateElementClasses(document.getElementById('star2'), cssClasses.dim, true);
+	}
+	if(moveCounter > (CARDS_ICONS.length * 3)) {
+		updateElementClasses(document.getElementById('star3'), cssClasses.dim, true);
+	}
+}
+
+function calculateGameTime() {
+	return new Date() - startDate;
 }
 
 
@@ -194,11 +194,8 @@ function checkGameCompletetion() {
 		}
 	}
 
-	document.getElementById('game-modal').className
-		= `${document.getElementById('game-modal').className} ${cssClasses.fullScreen}`;
-
-	document.getElementById('game-success-alert').className
-		= `${document.getElementById('game-success-alert').className} ${cssClasses.fullScreen}`;
+	updateElementClasses(document.getElementById('game-modal'), cssClasses.fullScreen, true);
+	updateElementClasses(document.getElementById('game-success-alert'), cssClasses.fullScreen, true);
 
 	document.getElementById('game-modal').addEventListener('click', function(){
 		document.getElementById('game-modal').className
@@ -207,13 +204,9 @@ function checkGameCompletetion() {
 			= (document.getElementById('game-success-alert').className).replace(cssClasses.fullScreen, '');
 	});
 
-	// alert(`You have successfully completed the game in ${calculateGameTime()/1000} seconds!`);
 	return true;
 }
 
-function calculateGameTime() {
-	return new Date() - startDate;
-}
 
 
 startCardBoard();
