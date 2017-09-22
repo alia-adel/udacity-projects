@@ -9,6 +9,9 @@
 const CARDS_ICONS = ['fa-camera', 'fa-futbol-o', 'fa-anchor', 'fa-bug', 'fa-bicycle', 'fa-diamond', 'fa-twitter', 'fa-car',
 'fa-camera', 'fa-futbol-o', 'fa-anchor', 'fa-bug', 'fa-bicycle', 'fa-diamond', 'fa-twitter', 'fa-car'];
 
+// Game card base css classes, used to reset the game card icon
+const CARD_ICON_BASE_CLASSES = 'fa fa-lg game-icons';
+
 // Object to hold the css classes used accross the app
 const cssClasses = {
 	flip : 'flip',
