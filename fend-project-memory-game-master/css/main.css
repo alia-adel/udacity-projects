@@ -185,7 +185,7 @@ body {
 
 
 #game-success-alert.fullScreen .fa-check {
-	color: #95d295;
+	color: #01B500;
     border: 1px solid #808080;
     padding: 30px;
     border-radius: 50%;
@@ -206,12 +206,13 @@ body {
     height: 30px;
     padding: 10px;
     text-align: center;
-    background-color: #95d295;
+    background-color: #01B500;
     border-radius: 4px;
     cursor: pointer;
-    &:hover {
-		box-shadow: 0 8px 6px -6px black;
-    }
+}
+
+#play-again:hover {
+	box-shadow: 0 8px 6px -6px black;
 }
 
 @-webkit-@keyframes flip_card {
