@@ -2,8 +2,8 @@
 
 ## Table of Contents
 
-* [Game Rules](#game_rules)
-* [Game Technical workflow](#technical)
+* [Link to Header](#game_rules)
+* [Link to Header](#technical)
 
 ## Game Rules
 
@@ -26,4 +26,5 @@
 * This project includes the following assets:
 	* **index.html** This is where the game html structure is located.
 	* **main.css** This is where the game board styling is located.
-	* **app.js** This is where all the board actions reside. (Please check)
+	* **app.js** This is where all the board actions reside.
+* To follow the game workflow, please check `app.js`.
