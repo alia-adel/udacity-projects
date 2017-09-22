@@ -2,8 +2,8 @@
 
 ## Table of Contents
 
-* [Link to Header](#game_rules)
-* [Link to Header](#technical)
+* [Game Rules](#game_rules)
+* [Technical](#technical)
 
 ## Game Rules
 
