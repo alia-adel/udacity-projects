@@ -17,6 +17,7 @@
 * Every card you flip will be considered as a move & will be incremented in the counter you see above the game board.
 	* After 17 moves you will loose one star, after 33, you'll loose two stars & after 49 moves all stars will be dimmed.
 * After you successfully manage to match all pairs, a success window will open showing how many moves you've done & how long have you spent.
+
 	![Completed Game](./img/complete.png)
 	![Success Message](./img/success.png)
 
@@ -25,4 +26,4 @@
 * This project includes the following assets:
 	* **index.html** This is where the game html structure is located.
 	* **main.css** This is where the game board styling is located.
-	* **app.js** This is where all the board actions reside.
+	* **app.js** This is where all the board actions reside. (Please check)
