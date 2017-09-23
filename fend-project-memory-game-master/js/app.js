@@ -28,6 +28,12 @@ let moveCounter = 0;
 // Tracking time by logging the gamer start time
 let startDate = new Date();
 
+// setInterval timer id
+let timerID;
+
+// Variable where the final game time will be set. intialized with start time
+let gameFinalTime = startDate;
+
 // Create game cards objects' array
 let cards = [];
 
@@ -105,31 +111,43 @@ function startGameBoard() {
 			cards.push(card);
 
 			// Add onclick event listener
-			card.htmlElement.addEventListener('click', function() {
-				/*
-				 * If the card is already flipped then don't count a new move
-				 * else increment the move counter & update the move value above the game deck
-				 */
-				if(!this.className.includes(cssClasses.show)){
-					moveCounter++;
-					document.getElementById('game-moves').innerHTML
-						= moveCounter + ((moveCounter <= 1)?' Move':' Moves');
-					calcualteMoveScore();
-				}
-
-				// Update card flipping status & check if it matches the already flipped one
-				if(!cards[i].correct) {
-					if(!cards[i].flipped) {
-						cards[i].showCard();
-					}
-					// This hack was added to force execution order
-					setTimeout(checkMatchingCards, 300, cards[i]);
+			card.htmlElement.addEventListener('click', function(event) {
+				if(!cards[i].clicked) {
+					cards[i].clicked = true;
+					cardClickEvent(cards[i]);
 				}
 			});
 		}
 
 	} else {
 		console.log(`Error: Game html cards element or/& Icons' array is empty`);
+	}
+}
+
+
+/**
+ * @description game card click event function
+ * @param {object} card - The card where we will bind the event to
+ */
+function cardClickEvent(card){
+	/*
+	 * If the card is already flipped then don't count a new move
+	 * else increment the move counter & update the move value above the game deck
+	 */
+	if(!card.htmlElement.className.includes(cssClasses.show)){
+		moveCounter++;
+		document.getElementById('game-moves').innerHTML
+			= moveCounter + ((moveCounter <= 1)?' Move':' Moves');
+		calcualteMoveScore();
+	}
+
+	// Update card flipping status & check if it matches the already flipped one
+	if(!card.correct) {
+		if(!card.flipped) {
+			card.showCard();
+		}
+		// This hack was added to force execution order
+		setTimeout(checkMatchingCards, 300, card);
 	}
 }
 
@@ -162,15 +180,12 @@ function shuffle(array) {
  *       update the move count above the game deck
  *       & dims the game deck's stars accoording to the following conditions:
  *         - Dim one star if clicks are greater than 16 moves.
- *         - Dim two star if clicks are greater than 32 moves.
- *         - Dim three star if clicks are greater than 48 moves.
+ *         - Dim two stars if clicks are greater than 32 moves.
  *
  */
 function calcualteMoveScore() {
-	if(gameStars != null && gameStars.length == 3) {
-		if(moveCounter > (cards.length * 3)) {
-			updateElementClasses(gameStars[2], cssClasses.dim, true);
-		} else if(moveCounter > (cards.length * 2)) {
+	if(gameStars != null && gameStars.length === 3) {
+		if(moveCounter > (cards.length * 2)) {
 			updateElementClasses(gameStars[1], cssClasses.dim, true);
 		} else if(moveCounter > cards.length) {
 			updateElementClasses(gameStars[0], cssClasses.dim, true);
@@ -214,9 +229,9 @@ function checkMatchingCards(card) {
 	 * 5- Check if with this move the game has completed or not by calling function 'checkGameCompletetion'
 	 * 6- In case the cards don't match then alert the user by shaking the cards & hide them both
 	 */
-	if(lastFlippedCard != null) {
-		if(lastFlippedCard.flipped && !lastFlippedCard.correct
-			&& card.index != lastFlippedCard.index && card.flipped && (card.icon === lastFlippedCard.icon)) {
+	if(lastFlippedCard != null && card.index != lastFlippedCard.index) {
+		if(lastFlippedCard.flipped && card.flipped && !lastFlippedCard.correct
+			 && (card.icon === lastFlippedCard.icon)) {
 			card.markCardCorrect();
 			lastFlippedCard.markCardCorrect();
 			lastFlippedCard = null;
@@ -234,6 +249,8 @@ function checkMatchingCards(card) {
 		lastFlippedCard = card;
 	}
 
+	// Add delay time to prevent multiple continuous clicks on the same card
+	setTimeout(function() {card.clicked = false;}, 1000);
 }
 
 
@@ -266,10 +283,13 @@ function checkGameCompletetion() {
 		}
 	}
 
+	//Stop timer
+	clearInterval(timerID);
+
 	// Update the success message by replacing placeholders for moves, time & stars
 	let succesMsg = document.getElementsByClassName('success-sub-msg')[0];
 	succesMsg.innerHTML = succesMsg.innerHTML.replace('#{move}', moveCounter).replace(
-		'#{time}', calculateGameTime());
+		'#{time}', gameFinalTime);
 
 
 	let dimmedStars = document.getElementsByClassName('dim').length;
@@ -299,20 +319,26 @@ function checkGameCompletetion() {
 
 /**
  * @description Calculates the time in seconds between the game start & the game completion
- * @returns {number} time in seconds
+ *              & updates the timer above the game board
  */
-function calculateGameTime() {
-	return (new Date() - startDate)/1000;
+function startTimer() {
+	gameFinalTime = Math.round((new Date() - startDate)/1000);
+	document.getElementById('game-time').innerHTML =`${gameFinalTime} seconds` ;
 }
-
 
 ///	End of Functions' Section ///
 
 
 
-/* Start the game board */
+/* - Start the game board
+ * - Start the game timer
+ */
 document.addEventListener('DOMContentLoaded',function(){
 	startGameBoard();
+	timerID = setInterval(startTimer, 1000);
 });
+
+
+
 
 
