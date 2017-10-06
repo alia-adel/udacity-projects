@@ -1,27 +1,39 @@
+
+
 /**
- * Description: A parent class that holds similar
- * game features for all the characters in the game.
+ * @description: Represents a game character
  */
 class GameCharacter {
 
-    constructor(sprite) {
+    /**
+     * @constructor
+     * @param {string} sprite - Game Character image
+     */
+    constructor(sprite, posX, posY) {
         this.sprite = sprite;
-        this.isGameComplete = false;
+        this.posX = posX;
+        this.posY = posY;
     }
 
-    render(posX, posY) {
-        // console.log(`Super render called: posX ${posX}, posY ${posY}, typeof image: ${Resources.get(this.sprite)}`);
+    /**
+     * @description: Renders the game character on the canvas
+     * @param {number} posX - image rendered X position
+     * @param {number} posY - image rendered Y position
+     */
+    render(posX = 1, posY = 1) {
         if(typeof posX === 'number' && typeof posY === 'number'){
             try {
                 ctx.drawImage(Resources.get(this.sprite), posX, posY);
             } catch(e) {
-                console.log(`Error occured unable to render image: \n ${e}`);
+                console.log(`Unable to render image beacuse of error:  ${e}`);
             }
         }
     }
 
     /**
-     * Description: Resets the character to its initial location
+     * @description: Resets the game character position to its insitial location
+     * @param {number} posX - image rendered X position
+     * @param {number} posY - image rendered Y position
      */
     resetLocation(posX = 1, posY = 1){
         this.posX = posX;
@@ -32,25 +44,22 @@ class GameCharacter {
 
 
 /**
- * Description: Enemies our player must avoid
+ * @description: Represents the Enemy in the game & extends the GameCharacter functionalities
  */
 class Enemy extends GameCharacter{
     // Class constructor
     constructor(posX, posY, speed){
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
-        super('images/enemy-bug.png');
-        this.posX = posX;
-        this.posY = posY;
+        super('images/enemy-bug.png', posX, posY);
         this.initialX = posX;
         this.speed = speed;
         this.initialSpeed = this.speed;
-        console.log(`Speed set at constructor: ${this.speed} & that sent as param: ${speed} posX: ${this.posX}`);
     }
 
-
-    // Update the enemy's position, required method for game
-    // Parameter: dt, a time delta between ticks
+    /**
+     * @description: Update the enemy speed by dt factor
+     */
     update(dt) {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
@@ -61,83 +70,92 @@ class Enemy extends GameCharacter{
     }
 
 
-    // Draw the enemy on the screen, required method for game
+    /**
+     * @description: Draws the enemy on the screen
+     */
     render() {
-        if(!this.isGameComplete){
-            let updatePosX = this.posX + this.speed;
-            if((typeof updatePosX === 'number') && updatePosX < 500) {
-                this.posX = updatePosX;
-                super.render(this.posX, this.posY);
+        let updatePosX = this.posX + this.speed;
+        if((typeof updatePosX === 'number') && updatePosX < 500) {
+            this.posX = updatePosX;
+            super.render(this.posX, this.posY);
 
-            } else {
-                console.log(`location reset: ${this.initialX}`);
-                if(typeof this.posY === 'number' && typeof this.initialX === 'number') {
-                    this.posX = this.initialX;
-                    this.speed = this.initialSpeed;
-                    super.render((typeof this.initialX === 'number')?this.initialX:1, this.posY);
-                }
-            }
         } else {
-            this.resetLocation();
-            super.render(1, this.posY);
+            console.log(`location reset: ${this.initialX}`);
+            if(typeof this.posY === 'number' && typeof this.initialX === 'number') {
+                this.posX = this.initialX;
+                this.speed = this.initialSpeed;
+                super.render((typeof this.initialX === 'number')?this.initialX:1, this.posY);
+            }
         }
     }
-
-
-
-    resetLocation() {
-        super.resetLocation(this.initialX, this.posY);
-    }
-
 }
 
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 /**
- * Description: The game Player
+ * @description: Represents the player in the game & extends the GameCharacter functionalities
  */
 class Player extends GameCharacter{
-
-
     // Class constructor
     constructor(posX = 200, posY = 405){
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
-        super('images/char-pink-girl.png');
-        this.posX = posX;
-        this.posY = posY;
-
+        super('images/char-pink-girl.png', posX, posY);
+        this.reachedWater = false;
+        this.score = 0;
     }
 
-
-    update() {
-
-    }
 
     /**
-     * Description: Draws the character on the screen based on the given X & Y positions
+     * @description: Updates the player's score
+     */
+    update() {
+        ctx.font = 'bold 16px Comic Sans MS';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#ffff00';
+        ctx.fillText(`Your Score: ${this.score}`, 10, 565);
+    }
+
+
+    /**
+     * @description: Draws the character on the screen based on the given X & Y positions
      */
     render() {
+        // Draw the player
         super.render(this.posX, this.posY);
-        if(!this.isGameComplete) {
-            didPlayerCollideWithEnenmy();
-            didPalyerReachWater();
-        } else {
-            ctx.drawImage(Resources.get('images/Star.png'), 200, -2);
-            this.resetLocation();
+
+        // Check if the player collided with an enemy
+        if(didPlayerCollideWithEnenmy()) {
+            // Reset the player's position
+            super.resetLocation(200, 405);
+
+            // Reset player's score
+            this.score = 0;
         }
+
+        // If the player reaches the water reset the player's position & update the score
+        if(didPlayerReachWater()){
+            // Draw a star to congratulate the user
+            ctx.drawImage(Resources.get('images/Star.png'), 200, 400);
+
+            // Reset the player's position
+            super.resetLocation(200, 405);
+            this.reachedWater = false;
+        }
+
+        // Update score section
+        this.update();
     }
 
+
     /**
-     * Description: Handles the player movement based on user's keyboard input
-     * @param - {string} The move done by the user, i.e.: up, down, right or left
+     * @description: Handles the player's movement based on the user's keyboard input
+     * @param {string} move - The move done by the user i.e.: up, down, right or left
      */
     handleInput(move) {
         const moveX = 101;
         const moveY = 83;
 
+        // Based on the recieved move parameter, increase/decrease the player's position & re-render the player
         switch(move) {
             case 'left':
                 if(this.allowMove((this.posX-moveX), this.posY)){
@@ -166,9 +184,11 @@ class Player extends GameCharacter{
         }
     }
 
+
     /**
-     * Description: check if the player can move or it will be outside the canvas boundries
-     * @param:
+     * @description: Check if the player can move or it will be outside the canvas boundries
+     * @param {number} posX - image rendered X position
+     * @param {number} posY - image rendered Y position
      */
     allowMove(posX, posY){
         if(posX >= 500 || posX <= -3) {
@@ -179,53 +199,35 @@ class Player extends GameCharacter{
         }
         return true;
     }
-
-    /**
-     * Description: Resets the player to its initial location
-     */
-    resetLocation(){
-        console.log(`Player location reset`);
-        super.resetLocation(200, 405);
-    }
 }
 
 
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-let allEnemies = [
-        new Enemy(-80,60,5),
-        new Enemy(-80,145,3),
-        new Enemy(-80,220,7),
-        new Enemy(-80,60,10)
-    ];
-
-// Place the player object in a variable called player
-let player = new Player();
-
-
 /**
- * Description: checks if the player hits an enemy or not
- * refrence: https://developer.mozilla.org/kab/docs/Games/Techniques/2D_collision_detection
+ * @description: Checks if the player collides with an enemy or not
+ * Rectangle intersection function refrenced from:
+ * https://developer.mozilla.org/kab/docs/Games/Techniques/2D_collision_detection
  */
 function didPlayerCollideWithEnenmy() {
     let enemyDimension = {},
         playerDimension = {};
 
+    // Set player's sprite dimension
+    playerDimension = {
+        x: player.posX,
+        y: player.posY,
+        width: 50,
+        height: 71
+    };
+
     for(enemy of allEnemies) {
+        // Set enemy;s sprite dimension
         enemyDimension = {
             x: enemy.posX,
             y: enemy.posY,
-            width: 101,
+            width: 80,
             height: 71
         };
 
-        playerDimension = {
-            x: player.posX,
-            y: player.posY,
-            width: 77,
-            height: 83
-        };
         console.log(`Enemy rectangle:
             X: ${enemyDimension.x}, ${enemyDimension.x + enemyDimension.width}
             Y: ${enemyDimension.y}, ${enemyDimension.y + enemyDimension.height}
@@ -233,32 +235,54 @@ function didPlayerCollideWithEnenmy() {
             X: ${playerDimension.x}, ${playerDimension.x + playerDimension.width}
             Y: ${playerDimension.y}, ${playerDimension.y + playerDimension.height}`);
 
+        // Check if player dimension intersects with enemy dimension
         if (enemyDimension.x < playerDimension.x + playerDimension.width &&
             enemyDimension.x + enemyDimension.width > playerDimension.x &&
             enemyDimension.y < playerDimension.y + playerDimension.height &&
             enemyDimension.height + enemyDimension.y > playerDimension.y) {
 
             console.log(`Player collided with Enemy`);
-            player.resetLocation();
-            return true;
 
+            return true;
         }
     }
 
     return false;
 }
 
-function didPalyerReachWater() {
-    if(player.posY <= 101) {
-        console.log(`Congratulation You passed the game`);
-        player.isGameComplete = true;
-        allEnemies.forEach(function(enemy) {
-            enemy.isGameComplete = true;
-        });
+
+/**
+ * @description: Checks if player reached water
+ */
+function didPlayerReachWater() {
+    if(player.posY <= 1) {
+        // Avoids score increment
+        if(!player.reachedWater){
+            this.reachedWater = true;
+            player.score++;
+        }
+
+        return true;
     }
 
     return false;
 }
+
+
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+let allEnemies = [
+        new Enemy(-80,60,7),
+        new Enemy(-80,145,5),
+        new Enemy(-80,220,9),
+        new Enemy(-80,60,10)
+    ];
+
+
+
+// Place the player object in a variable called player
+let player = new Player();
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
