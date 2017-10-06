@@ -1,5 +1,4 @@
 
-
 /**
  * @description: Represents a game character
  */
@@ -20,7 +19,7 @@ class GameCharacter {
      * @param {number} posX - image rendered X position
      * @param {number} posY - image rendered Y position
      */
-    render(posX = 1, posY = 1) {
+    render(posX, posY) {
         if(typeof posX === 'number' && typeof posY === 'number'){
             try {
                 ctx.drawImage(Resources.get(this.sprite), posX, posY);
@@ -35,7 +34,7 @@ class GameCharacter {
      * @param {number} posX - image rendered X position
      * @param {number} posY - image rendered Y position
      */
-    resetLocation(posX = 1, posY = 1){
+    resetLocation(posX, posY){
         this.posX = posX;
         this.posY = posY;
     }
@@ -47,7 +46,12 @@ class GameCharacter {
  * @description: Represents the Enemy in the game & extends the GameCharacter functionalities
  */
 class Enemy extends GameCharacter{
-    // Class constructor
+    /**
+     * @constructor
+     * @param {number} posX - Enemy position X
+     * @param {number} posY - Enemy position Y
+     * @param {number} speed - How many moves to jump per frame
+     */
     constructor(posX, posY, speed){
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
@@ -80,7 +84,6 @@ class Enemy extends GameCharacter{
             super.render(this.posX, this.posY);
 
         } else {
-            console.log(`location reset: ${this.initialX}`);
             if(typeof this.posY === 'number' && typeof this.initialX === 'number') {
                 this.posX = this.initialX;
                 this.speed = this.initialSpeed;
@@ -95,13 +98,18 @@ class Enemy extends GameCharacter{
  * @description: Represents the player in the game & extends the GameCharacter functionalities
  */
 class Player extends GameCharacter{
-    // Class constructor
+    /**
+     * @constructor
+     * @param {number} posX - Player position X
+     * @param {number} posY - Player position Y
+     */
     constructor(posX = 200, posY = 405){
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
         super('images/char-pink-girl.png', posX, posY);
         this.reachedWater = false;
         this.score = 0;
+        this.winningStarTime = -1 // Flag to hold the winning star rendering
     }
 
 
@@ -134,13 +142,25 @@ class Player extends GameCharacter{
 
         // If the player reaches the water reset the player's position & update the score
         if(didPlayerReachWater()){
-            // Draw a star to congratulate the user
-            ctx.drawImage(Resources.get('images/Star.png'), 200, 400);
+
+            // Drawing a star to congratulation the user
+            ctx.drawImage(Resources.get('images/Star.png'), 2, -1);
+            this.winningStarTime = new Date();
 
             // Reset the player's position
             super.resetLocation(200, 405);
             this.reachedWater = false;
         }
+
+        // Draw a star for 0.5 second to congratulate the user
+        if(this.winningStarTime != -1) {
+            if((new Date() - this.winningStarTime) <= 500){
+                ctx.drawImage(Resources.get('images/Star.png'), 2, -1);
+            } else {
+                this.winningStarTime = -1;
+            }
+        }
+
 
         // Update score section
         this.update();
@@ -228,21 +248,11 @@ function didPlayerCollideWithEnenmy() {
             height: 71
         };
 
-        console.log(`Enemy rectangle:
-            X: ${enemyDimension.x}, ${enemyDimension.x + enemyDimension.width}
-            Y: ${enemyDimension.y}, ${enemyDimension.y + enemyDimension.height}
-            Player rectangle:
-            X: ${playerDimension.x}, ${playerDimension.x + playerDimension.width}
-            Y: ${playerDimension.y}, ${playerDimension.y + playerDimension.height}`);
-
         // Check if player dimension intersects with enemy dimension
         if (enemyDimension.x < playerDimension.x + playerDimension.width &&
             enemyDimension.x + enemyDimension.width > playerDimension.x &&
             enemyDimension.y < playerDimension.y + playerDimension.height &&
             enemyDimension.height + enemyDimension.y > playerDimension.y) {
-
-            console.log(`Player collided with Enemy`);
-
             return true;
         }
     }
@@ -256,15 +266,13 @@ function didPlayerCollideWithEnenmy() {
  */
 function didPlayerReachWater() {
     if(player.posY <= 1) {
-        // Avoids score increment
+        // Extra check in case the player stays in place, to avoid score increment
         if(!player.reachedWater){
             this.reachedWater = true;
             player.score++;
         }
-
         return true;
     }
-
     return false;
 }
 
@@ -274,7 +282,7 @@ function didPlayerReachWater() {
 let allEnemies = [
         new Enemy(-80,145,5),
         new Enemy(-80,230,4),
-        new Enemy(-80,60,8)
+        new Enemy(-80,65,8)
     ];
 
 
