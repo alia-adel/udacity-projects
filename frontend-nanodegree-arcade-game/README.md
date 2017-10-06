@@ -20,16 +20,16 @@ frontend-nanodegree-arcade-game
 
 ## Technical
 - The project includes the following assets:
-	- `\css` folder includes the project styles.
-	- `\js` folder includes the javaScript files needed to run the game:
+	- `\css` includes the project styles.
+	- `\js` includes the javaScript files needed to run the game & it includes the following files:
 		- `engine.js` this is the app engine needed to run the game.
 		- `resources.js` an image loading utility.
 		- `app.js` this is where the player & enemy classes with their functionalities exists.
-	- `\images` folder includes all the images needed for building the game arcade.
-	- `index.html` this is the main html file & which you'll need to open to start playing your game.
+	- `\images` includes all the images needed for building the arcade game.
+	- `index.html` is the main html file & which you'll need to open to start playing your game.
 
 ## Credits
-- Player & Enemy colliding check refered to from [2D Collision Detection](https://developer.mozilla.org/kab/docs/Games/Techniques/2D_collision_detection)
+- Player & Enemy colliding check referenced from [2D Collision Detection](https://developer.mozilla.org/kab/docs/Games/Techniques/2D_collision_detection)
 
 
 
