@@ -179,7 +179,12 @@ class Player extends GameCharacter{
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-let allEnemies = [new Enemy(1,60,5), new Enemy(1,145,3), new Enemy(1,220,7), new Enemy(1,60,10)];
+let allEnemies = [
+    new Enemy(-80,60,5),
+    new Enemy(-80,145,3),
+    new Enemy(-80,220,7),
+    new Enemy(-80,60,10)
+    ];
 
 // Place the player object in a variable called player
 let player = new Player();
