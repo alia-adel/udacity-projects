@@ -6,6 +6,7 @@ class GameCharacter {
 
     constructor(sprite) {
         this.sprite = sprite;
+        this.isGameComplete = false;
     }
 
     render(posX, posY) {
@@ -62,18 +63,23 @@ class Enemy extends GameCharacter{
 
     // Draw the enemy on the screen, required method for game
     render() {
-        let updatePosX = this.posX + this.speed;
-        if((typeof updatePosX === 'number') && updatePosX < 500) {
-            this.posX = updatePosX;
-            super.render(this.posX, this.posY);
+        if(!this.isGameComplete){
+            let updatePosX = this.posX + this.speed;
+            if((typeof updatePosX === 'number') && updatePosX < 500) {
+                this.posX = updatePosX;
+                super.render(this.posX, this.posY);
 
-        } else {
-            console.log(`location reset: ${this.initialX}`);
-            if(typeof this.posY === 'number' && typeof this.initialX === 'number') {
-                this.posX = this.initialX;
-                this.speed = this.initialSpeed;
-                super.render((typeof this.initialX === 'number')?this.initialX:1, this.posY);
+            } else {
+                console.log(`location reset: ${this.initialX}`);
+                if(typeof this.posY === 'number' && typeof this.initialX === 'number') {
+                    this.posX = this.initialX;
+                    this.speed = this.initialSpeed;
+                    super.render((typeof this.initialX === 'number')?this.initialX:1, this.posY);
+                }
             }
+        } else {
+            this.resetLocation();
+            super.render(1, this.posY);
         }
     }
 
@@ -115,7 +121,13 @@ class Player extends GameCharacter{
      */
     render() {
         super.render(this.posX, this.posY);
-        didPlayerCollideWithEnenmy();
+        if(!this.isGameComplete) {
+            didPlayerCollideWithEnenmy();
+            didPalyerReachWater();
+        } else {
+            ctx.drawImage(Resources.get('images/Star.png'), 200, -2);
+            this.resetLocation();
+        }
     }
 
     /**
@@ -236,6 +248,17 @@ function didPlayerCollideWithEnenmy() {
     return false;
 }
 
+function didPalyerReachWater() {
+    if(player.posY <= 101) {
+        console.log(`Congratulation You passed the game`);
+        player.isGameComplete = true;
+        allEnemies.forEach(function(enemy) {
+            enemy.isGameComplete = true;
+        });
+    }
+
+    return false;
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
