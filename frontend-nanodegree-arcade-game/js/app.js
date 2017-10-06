@@ -112,7 +112,7 @@ class Player extends GameCharacter{
         ctx.font = 'bold 16px Comic Sans MS';
         ctx.textAlign = 'left';
         ctx.fillStyle = '#ffff00';
-        ctx.fillText(`Your Score: ${this.score}`, 10, 565);
+        ctx.fillText(`Your Score: ${this.score}`, 8, 565);
     }
 
 
@@ -272,10 +272,9 @@ function didPlayerReachWater() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 let allEnemies = [
-        new Enemy(-80,60,7),
         new Enemy(-80,145,5),
-        new Enemy(-80,220,9),
-        new Enemy(-80,60,10)
+        new Enemy(-80,230,4),
+        new Enemy(-80,60,8)
     ];
 
 
