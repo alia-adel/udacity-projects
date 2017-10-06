@@ -13,7 +13,8 @@ frontend-nanodegree-arcade-game
 	- The score at the bottom increments by one.
 	- A star appears at the top.
 	- Th player goes back to her initial position.
-	![Board Game Success](./images/gameBoard_Success.PNG)
+
+	![Board Game Success](./images/gameBoard_Sucess.PNG)
 - If the player touches any of the bugs, the score will be reset & the player will go back to her initial position.
 
 ## Credits
