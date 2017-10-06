@@ -65,9 +65,6 @@ class Enemy extends GameCharacter{
      * @description: Update the enemy speed by dt factor
      */
     update(dt) {
-        // You should multiply any movement by the dt parameter
-        // which will ensure the game runs at the same speed for
-        // all computers.
         if(dt > 0){
             this.speed = dt + this.speed;
         }
@@ -87,7 +84,7 @@ class Enemy extends GameCharacter{
             if(typeof this.posY === 'number' && typeof this.initialX === 'number') {
                 this.posX = this.initialX;
                 this.speed = this.initialSpeed;
-                super.render((typeof this.initialX === 'number')?this.initialX:1, this.posY);
+                super.render((typeof this.initialX === 'number')? this.initialX:1, this.posY);
             }
         }
     }
@@ -228,8 +225,7 @@ class Player extends GameCharacter{
  * https://developer.mozilla.org/kab/docs/Games/Techniques/2D_collision_detection
  */
 function didPlayerCollideWithEnenmy() {
-    let enemyDimension = {},
-        playerDimension = {};
+    let enemyDimension = {};
 
     // Set player's sprite dimension
     playerDimension = {
