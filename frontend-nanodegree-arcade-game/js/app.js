@@ -115,6 +115,7 @@ class Player extends GameCharacter{
      */
     render() {
         super.render(this.posX, this.posY);
+        didPlayerCollideWithEnenmy();
     }
 
     /**
@@ -171,6 +172,7 @@ class Player extends GameCharacter{
      * Description: Resets the player to its initial location
      */
     resetLocation(){
+        console.log(`Player location reset`);
         super.resetLocation(200, 405);
     }
 }
@@ -180,14 +182,59 @@ class Player extends GameCharacter{
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 let allEnemies = [
-    new Enemy(-80,60,5),
-    new Enemy(-80,145,3),
-    new Enemy(-80,220,7),
-    new Enemy(-80,60,10)
+        new Enemy(-80,60,5),
+        new Enemy(-80,145,3),
+        new Enemy(-80,220,7),
+        new Enemy(-80,60,10)
     ];
 
 // Place the player object in a variable called player
 let player = new Player();
+
+
+/**
+ * Description: checks if the player hits an enemy or not
+ * refrence: https://developer.mozilla.org/kab/docs/Games/Techniques/2D_collision_detection
+ */
+function didPlayerCollideWithEnenmy() {
+    let enemyDimension = {},
+        playerDimension = {};
+
+    for(enemy of allEnemies) {
+        enemyDimension = {
+            x: enemy.posX,
+            y: enemy.posY,
+            width: 101,
+            height: 71
+        };
+
+        playerDimension = {
+            x: player.posX,
+            y: player.posY,
+            width: 77,
+            height: 83
+        };
+        console.log(`Enemy rectangle:
+            X: ${enemyDimension.x}, ${enemyDimension.x + enemyDimension.width}
+            Y: ${enemyDimension.y}, ${enemyDimension.y + enemyDimension.height}
+            Player rectangle:
+            X: ${playerDimension.x}, ${playerDimension.x + playerDimension.width}
+            Y: ${playerDimension.y}, ${playerDimension.y + playerDimension.height}`);
+
+        if (enemyDimension.x < playerDimension.x + playerDimension.width &&
+            enemyDimension.x + enemyDimension.width > playerDimension.x &&
+            enemyDimension.y < playerDimension.y + playerDimension.height &&
+            enemyDimension.height + enemyDimension.y > playerDimension.y) {
+
+            console.log(`Player collided with Enemy`);
+            player.resetLocation();
+            return true;
+
+        }
+    }
+
+    return false;
+}
 
 
 // This listens for key presses and sends the keys to your
