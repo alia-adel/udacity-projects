@@ -32,6 +32,7 @@ $(function() {
          * and that the URL is not empty.
          */
          it('have URL', function() {
+            expect(allFeeds).toBeDefined();
             for(const feed of allFeeds) {
                 // Test that url is defined on the feed entry
                 expect(feed.url).toBeDefined();
@@ -78,31 +79,68 @@ $(function() {
          * should have two expectations: does the menu display when
          * clicked and does it hide when clicked again.
          */
-        /* it('changes visibility on hamburger click', function() {
-            spyOn(document.getElementsByClassName('.menu-icon-link'), 'on').and.callThrough();
-            expect($document.getElementsByClassName('.menu-icon-link').on).toHaveBeenCalledWith('click');
+         it('changes visibility on hamburger click', function() {
+            // Trigger click on the menu icon
+            $('.menu-icon-link').trigger( "click" );
+            // Since the page just loaded it's expected that the menu was hidden by default
+            // Therefore clicking on the icon should show the menu & remove the 'menu-hidden' class
+            expect($('.menu-hidden').length).toEqual(0);
 
-         });*/
+            // Trigger click on the menu icon
+            $('.menu-icon-link').trigger( "click" );
+            // The menu is now visible, so triggering the click again
+            // should now hide it by removing the 'menu-hidden' class
+            expect($('.menu-hidden').length).toEqual(1);
+
+         });
 
     });
 
     /* TODO: Write a new test suite named "Initial Entries" */
-    /* TODO: Write a test that ensures when the loadFeed
+    describe('Initial Entries', function() {
+
+        /* TODO: Write a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
-    /*describe('Initial Entries', function() {
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                done();
+            });
+        });
+
+        it('loaded with at least one entry', function(done) {
+            // Test that allFeeds is defined
+            expect(allFeeds).toBeDefined();
+
+            // Test that allFeeds object has at least one entry
+            expect(allFeeds.length).toBeGreaterThan(0);
+
+            // Test that '.feed' element is defined
+            expect($('.feed')).toBeDefined();
+
+            // Test that '.feed' element has at least one '.entry' element
+            expect($('.feed').find('.entry')).toBeDefined();
+            expect($('.feed').find('.entry').length).toBeGreaterThan(0);
+
+            done();
+        });
 
 
-    });*/
+    });
 
 
     /* TODO: Write a new test suite named "New Feed Selection" */
-
+    describe('New Feed Selection', function() {
         /* TODO: Write a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+        it('changes with every entry', function() {
+
+        });
+
+    });
 }());
