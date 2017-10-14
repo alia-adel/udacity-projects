@@ -69,7 +69,10 @@ function init() {
                      container.append(entryTemplate(entry));
                  });
 
+                 console.log(`Feed ${id}: has title of ${title.html()}`);
+
                  if (cb) {
+                    console.log(`feed loaded`);
                      cb();
                  }
                },

@@ -13,6 +13,7 @@ $(function() {
     * a related set of tests. This suite is all about the RSS
     * feeds definitions, the allFeeds variable in our application.
     */
+
     describe('RSS Feeds', function() {
         /* This is our first test - it tests to make sure that the
          * allFeeds variable has been defined and that it is not
@@ -106,9 +107,7 @@ $(function() {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
         beforeEach(function(done) {
-            loadFeed(0, function() {
-                done();
-            });
+            loadFeed(0, done);
         });
 
         it('loaded with at least one entry', function(done) {
@@ -138,9 +137,82 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-        it('changes with every entry', function() {
+
+        let feedOneName, feedTwoName;
+        let feedOneEntries, feedTwoEntries;
+
+        beforeEach(function(done) {
+            console.log('New test suite');
+            originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+            // jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
+            let asyncLoad = new Promise((resolve, reject) => {
+                loadFeed(0, done);
+                if(done) {
+                    resolve(done);
+                }
+            });
+
+            asyncLoad.then((done) => {
+                feedOneName = $('.header-title').html();
+                feedOneEntries = $('.feed').find('.entry');
+
+                console.log(`Feed One header: ${feedOneName}
+                    Feed One Entries: ${feedOneEntries}`);
+                loadFeed(1, done);
+            });
+
+
 
         });
 
+        it('changes its content', function(done) {
+
+            feedTwoName = $('.header-title').html();
+            feedTwoEntries = $('.feed').find('.entry');
+
+            console.log(`Feed Two header: ${feedTwoName}
+                         Feed Two Entries: ${feedTwoEntries}`);
+
+            // Test that allFeeds is defined
+            expect(allFeeds).toBeDefined();
+
+            // Test that allFeeds' size is greater than 1
+            expect(allFeeds.length).toBeGreaterThan(1);
+
+            /**
+             * load & save bothe allFeeds[0] & allFeed[1] & make sure
+             * they are defined & not equal
+             */
+
+
+            // Expect that the title displayed will be that of the first feed
+            expect(feedOneName).toEqual(allFeeds[0].name);
+
+            // Expect that the title displayed will be that of the second feed
+            expect(feedTwoName).toEqual(allFeeds[1].name);
+
+            // Expect that both feeds don't have the same subject
+            expect(feedOneName).not.toEqual(feedTwoName);
+
+            // Expect that first feed & second feed content is not equal
+            console.log('Feed1:');
+            for(const feed of Array.from(feedOneEntries)) {
+                console.log($(feed).html());
+            }
+            console.log('Feed2:');
+            for(const feed of Array.from(feedTwoEntries)) {
+                console.log($(feed).html());
+            }
+
+            expect(feedOneEntries).not.toEqual(feedTwoEntries);
+
+            done();
+
+        });
+
+        afterEach(function() {
+          jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+        });
     });
 }());
