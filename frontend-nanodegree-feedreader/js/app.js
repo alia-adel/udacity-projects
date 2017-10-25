@@ -10,7 +10,7 @@
 var allFeeds = [
     {
         name: 'Udacity Blog',
-        url: 'http://blog.udacity.com/feed'
+        url: 'http://blog.udacity.com/feed'    
     }, {
         name: 'CSS Tricks',
         url: 'http://feeds.feedburner.com/CssTricks'
@@ -69,10 +69,7 @@ function init() {
                      container.append(entryTemplate(entry));
                  });
 
-                 console.log(`Feed ${id}: has title of ${title.html()}`);
-
                  if (cb) {
-                    console.log(`feed loaded`);
                      cb();
                  }
                },
